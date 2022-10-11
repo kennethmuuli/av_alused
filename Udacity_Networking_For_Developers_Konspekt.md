@@ -11,7 +11,7 @@ Kui saad vastuseks, et saadeti N sõnumit ja tagasi tuli N sõnumit, 0% sisu kao
 
 
 ## Ei olnud võimalik sisestada
-- tcpdump -n -c5 -i eth0 port 22
+**tcpdump -n -c5 -i eth0 port 22**
   ```
   kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ tcpdump -n -c5 -i eth0 port 22
   tcpdump: eth0: You don't have permission to capture on that device
