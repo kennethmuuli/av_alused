@@ -3,10 +3,14 @@
 Enne Google Cloud Shellis käskude kasutamist sisestada:
 ```
 sudo apt-get update
-sudo apt-get install netcat-openbsd tcpdump traceroute mtr
+sudo apt-get install netcat-openbsd tcpdump traceroute mtr iputils-ping
 ```
 
 ## From Ping to HTTP käsud ja sisu selgitus
+
+<details>
+  <summary>Vaata lähemalt</summary>
+  
 ### `ping -cN N.N.N.N` 
 
 Ping on käsk (kus N = mingi number), millega testida, kas sinu arvuti suudab saata ja vastuvõtta liiklust konkreetselt aadressilt. -cN tähendab, et saata tuleb N (kus N on number, mis sätestab arvu) test sõnumit, siis lõpetada ja tulemused kuvada terminali.
@@ -163,3 +167,41 @@ If you would like to save the results of an nc command to a file, you can do thi
 `sudo: lsof: command not found`
   
 Lahenduseks kasuta enne käsklust: `sudo apt install lsof`
+  
+</details>
+  
+## Names and Addresses käsud ja sisu selgitus
+
+### `host example.com`
+  
+Võimaldab vaadata DNSi sissekandeid inimloetavas vormis.
+  
+`host -t a example.com` pärib konkreetselt IPv4 aadressi. *Märkus, aka. "A record"*
+
+<details>
+  <summary>host manuaali väljavõte: "Description & Options"</summary>  
+
+DESCRIPTION
+Host is a simple utility for performing DNS lookups. It is normally used to convert names to IP addresses and vice  versa.  When  no arguments or options are given, host prints a short summary of its command-line arguments and options.
+
+Name  is the domain name that is to be looked up. It can also be a dotted-decimal IPv4 address or a colon-delimited IPv6 address, in which case host by default performs a reverse lookup for that address.  server is an optional argument which is either the  name  or IP address of the name server that host should query instead of the server or servers listed in /etc/resolv.conf.
+  
+</details>
+
+### `dig example.com`
+  
+Erinevalt `host` käsust, tagastab antud käsk DNSi sissekanded lähemale nende algsel kujul. Seetähendab, sarnaselt nagu neid ootaks mõni skript ja lähemal kujule nagu need on tegelikult salvestatud. Antud käsk näitab meile ka täiendavat informatsiooni nagu, milline server meie päringule vastas ja millal päringule vastati.
+  
+### DNS sissekande tüübid
+  
+![image](https://user-images.githubusercontent.com/115208151/196042206-a5b88b0d-e6bd-495d-aabe-5939cbedf489.png)
+
+<details>
+  <summary>DNS type definitions</summary>  
+
+- What is a DNS A record? The "A" stands for "address" and this is the most fundamental type of DNS record: it indicates the IP address of a given domain. For example, if you pull the DNS records of cloudflare.com, the A record currently returns an IP address of: 104.17. 210.9.
+- A Canonical Name or CNAME record is a type of DNS record that maps an alias name to a true or canonical domain name. CNAME records are typically used to map a subdomain such as www or mail to the domain hosting that subdomain's content.
+- An AAAA record maps a domain name to the IP address (Version 6) of the computer hosting the domain. An AAAA record is used to find the IP address of a computer connected to the internet from a name.
+- NS = An NS record (or nameserver record) is a DNS record that contains the name of the authoritative name server within a domain or DNS zone. When a client queries for an IP address, it can find the IP address of their intended destination from an NS record via a DNS lookup.
+  
+</details>
