@@ -29,6 +29,8 @@ Kui saad vastuseks, et saadeti N sõnumit ja tagasi tuli N sõnumit, 0% sisu kao
 `\r` viib rea markeri tagasi rea algusesse
 
 `\n` tekitab uue rea
+  
+`\r\n` on justkui "Enter" klahvi vajutamine
 
 `nc ...` viitab netcat tööriistale, mille abil saab manuaalselt suhelda veebiteenustega (välja lugemine või sisse kirjutamine), kasutades selle tarbeks TCP (Transmission Control Protocol) või UDP (User Datagram Protocol). Oluline on antud juhul mõista, et nc ise ei tea HTTP-st mitte midagi. See saadab enda sisendi, antud näites en.wikipedia.org otse etteantud porti ja kuna antud juhul vastaspoolel olev server seda HTTP päringuna loeb, saadab see vastuse tagasi.
 
