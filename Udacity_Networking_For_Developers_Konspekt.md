@@ -220,3 +220,19 @@ kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ ping -c3 8.8.8.8
 Lahenduseks: installi ping järgmise käsuga `sudo apt-get install iputils-ping`
 
 </details>
+
+## Muud kasulikud käsud
+
+<details>
+  <summary>"Vaata lähemalt"</summary>
+  
+### `pwd`
+pwd stands for Print Working Directory. It prints the path of the working directory, starting from the root.
+
+This command has two flags.
+```
+pwd -L: Prints the symbolic path.
+pwd -P: Prints the actual path.
+```
+
+</details>
