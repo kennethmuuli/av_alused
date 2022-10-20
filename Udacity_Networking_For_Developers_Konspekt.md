@@ -1,5 +1,7 @@
 # Udacity, Networking For Developers Konspekt
 
+GCS otselink: https://console.cloud.google.com/home/dashboard
+
 Enne Google Cloud Shellis käskude kasutamist sisestada:
 ```
 sudo apt-get update
@@ -173,6 +175,8 @@ Erinevalt `host` käsust, tagastab antud käsk DNSi sissekanded lähemale nende 
   
 ## Ei olnud võimalik sisestada
   
+**MÄRKUSEKS: SISSE KIRJUTAMISEL JÄÄDVUSTA ALATI KA KOHT, KUS PROBLEEM TEKKIS.**
+  
 > **tcpdump -n -c5 -i eth0 port 22**
   
   ```
@@ -180,21 +184,11 @@ Erinevalt `host` käsust, tagastab antud käsk DNSi sissekanded lähemale nende 
   tcpdump: eth0: You don't have permission to capture on that device
   (socket: Operation not permitted)
   ```
-
-**ping -c3 8.8.8.8**
+Lahenduseks: 
+  1) lisa käsule `sudo` -> `tcpdump -n -c5 -i eth0 port 22`
+  2) Käsu tulemuse nägemiseks algata teine paralleelne session ja tee ssh päring
   
-```
-kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ ping -c3 8.8.8.8
--bash: ping: command not found
-```
-  
-Lahenduseks: installi ping järgmise käsuga `sudo apt-get install iputils-ping`
-
-**Tupikutest välja tulemine Cloud Shellis**
-
-A la selle käsuga `printf "GET / HTTP/1.1\r\nHost: www.example.com\r\n\r\n" | nc www.example.com 80` jään seisu, kus ei saa uusi käske sisestada.
-  
-Lahenduseks: ctrl + C
+**PS! Uuri välja, kus seal kursusel sul see probleem tekkis täpselt.**
 
 > **Kuidas seada ülesse kohaliku faili teekonda Cloud Shellis `>`?**
 
@@ -202,8 +196,27 @@ If you would like to save the results of an nc command to a file, you can do thi
 
 `printf "GET / HTTP/1.1\r\nHost: www.example.com\r\n\r\n" | nc www.example.com 80 > example.txt`
   
+<details>
+  <summary>"Lahendatud"</summary>
+  
 **sudo lsof -i**
 
 `sudo: lsof: command not found`
   
 Lahenduseks kasuta enne käsklust: `sudo apt install lsof`
+
+**Tupikutest välja tulemine Cloud Shellis**
+
+A la selle käsuga `printf "GET / HTTP/1.1\r\nHost: www.example.com\r\n\r\n" | nc www.example.com 80` jään seisu, kus ei saa uusi käske sisestada.
+  
+Lahenduseks: ctrl + C
+  
+**ping -c3 8.8.8.8**
+  
+```
+kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ ping -c3 8.8.8.8
+-bash: ping: command not found
+```
+Lahenduseks: installi ping järgmise käsuga `sudo apt-get install iputils-ping`
+
+</details>
