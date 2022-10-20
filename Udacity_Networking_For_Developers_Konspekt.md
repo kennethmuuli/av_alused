@@ -3,7 +3,7 @@
 Enne Google Cloud Shellis käskude kasutamist sisestada:
 ```
 sudo apt-get update
-sudo apt-get install netcat-openbsd tcpdump traceroute mtr iputils-ping
+sudo apt-get install netcat-openbsd tcpdump traceroute mtr iputils-ping lsof
 ```
 
 ## From Ping to HTTP käsud ja sisu selgitus
@@ -127,50 +127,13 @@ nc [-C] localhost 25 << EOF
 `302 Moved\r\nLocation:` määrame ümber suunamise https://www.eff.org lehele.
   
 > Mida antud kontekstis see 302 tähendab?
-
-
-## Ei olnud võimalik sisestada
-  
-> **tcpdump -n -c5 -i eth0 port 22**
-  
-  ```
-  kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ tcpdump -n -c5 -i eth0 port 22
-  tcpdump: eth0: You don't have permission to capture on that device
-  (socket: Operation not permitted)
-  ```
-
-**ping -c3 8.8.8.8**
-  
-```
-kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ ping -c3 8.8.8.8
--bash: ping: command not found
-```
-  
-Lahenduseks: installi ping järgmise käsuga `sudo apt-get install iputils-ping`
-
-> **`^D` (Control D) lõpetab sessiooni, sessiooni saavad lõpetada mõlemad osapooled.**
-  
-Ei reageeri (bootcampitud Macil, võibolla mingi keyboard error)
-
-> **Tupikutest välja tulemine Cloud Shellis**
-
-A la selle käsuga `printf "GET / HTTP/1.1\r\nHost: www.example.com\r\n\r\n" | nc www.example.com 80` jään seisu, kus ei saa uusi käske sisestada.
-
-**Kuidas seada ülesse kohaliku faili teekonda Cloud Shellis `>`?**
-
-If you would like to save the results of an nc command to a file, you can do this with the > shell redirection operator. For instance, this will save the results to the file example.txt:
-
-`printf "GET / HTTP/1.1\r\nHost: www.example.com\r\n\r\n" | nc www.example.com 80 > example.txt`
-  
-**sudo lsof -i**
-
-`sudo: lsof: command not found`
-  
-Lahenduseks kasuta enne käsklust: `sudo apt install lsof`
   
 </details>
   
 ## Names and Addresses käsud ja sisu selgitus
+
+<details>
+  <summary>Vaata lähemalt</summary>
 
 ### `host example.com`
   
@@ -205,3 +168,42 @@ Erinevalt `host` käsust, tagastab antud käsk DNSi sissekanded lähemale nende 
 - NS = An NS record (or nameserver record) is a DNS record that contains the name of the authoritative name server within a domain or DNS zone. When a client queries for an IP address, it can find the IP address of their intended destination from an NS record via a DNS lookup.
   
 </details>
+  
+</details>
+  
+## Ei olnud võimalik sisestada
+  
+> **tcpdump -n -c5 -i eth0 port 22**
+  
+  ```
+  kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ tcpdump -n -c5 -i eth0 port 22
+  tcpdump: eth0: You don't have permission to capture on that device
+  (socket: Operation not permitted)
+  ```
+
+**ping -c3 8.8.8.8**
+  
+```
+kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ ping -c3 8.8.8.8
+-bash: ping: command not found
+```
+  
+Lahenduseks: installi ping järgmise käsuga `sudo apt-get install iputils-ping`
+
+**Tupikutest välja tulemine Cloud Shellis**
+
+A la selle käsuga `printf "GET / HTTP/1.1\r\nHost: www.example.com\r\n\r\n" | nc www.example.com 80` jään seisu, kus ei saa uusi käske sisestada.
+  
+Lahenduseks: ctrl + C
+
+> **Kuidas seada ülesse kohaliku faili teekonda Cloud Shellis `>`?**
+
+If you would like to save the results of an nc command to a file, you can do this with the > shell redirection operator. For instance, this will save the results to the file example.txt:
+
+`printf "GET / HTTP/1.1\r\nHost: www.example.com\r\n\r\n" | nc www.example.com 80 > example.txt`
+  
+**sudo lsof -i**
+
+`sudo: lsof: command not found`
+  
+Lahenduseks kasuta enne käsklust: `sudo apt install lsof`
