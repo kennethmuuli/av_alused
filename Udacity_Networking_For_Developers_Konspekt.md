@@ -217,6 +217,136 @@ Käsk annab sarnase tulemuse, mis `ip addr show` kuid toob esile palju rohkem in
 `ip route show default` (Linux) ja `netstat -nr` (Linux, Mac, Unix) on käsud, millega on võimalik leida enda gateway (ruuteri) default aadressi.
   
 </details>
+
+## Protocol Layers
+  
+<details>
+  <summary>Vaata lähemalt</summary> 
+  
+### Protocol Layers breakdown and structure
+  
+<details>
+  <summary>Breakdown & Structure</summary> 
+  
+![image](https://user-images.githubusercontent.com/115208151/199561047-84452f51-1c11-461c-8475-89ef9d229a0b.png)
+  
+![image](https://user-images.githubusercontent.com/115208151/199561425-d729a286-24d9-4152-bb8b-e0daf34f336e.png)
+
+</details>  
+
+### `sudo tcpdump -n host 8.8.8.8`
+
+`tcpdump` kuvatud info ülesehitus ühe pingi kohta:
+
+```  
+17:40:40.600401 IP 172.17.0.4 > 8.8.8.8: ICMP echo request, id 16682, seq 1, length 64
+17:40:40.601734 IP 8.8.8.8 > 172.17.0.4: ICMP echo reply, id 16682, seq 1, length 64
+```
+
+*Ühe pingi kohta kuvab tcpdump välja kaks rida, päring ja vastus. Igal real on näha (muuseas) päring, IP millelt päring tehakse, IP kuhu päring läheb (või kust vastus tuleb ja kuhu) ning viimane element näitab paketi pikkust, 64 bitti, mis vastab pingi paketi suurusele 64 bitti.*
+
+Samal ajal teises Google Cloud Shell instantsis jooksev `ping 8.8.8.8` käsk
+
+```
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=1.37 ms
+```
+
+**MÄRKUSED:**
+
+`port 53` näitab väljuvaid DNS päringuid.
+
+`port 80` näitab pakette, mida minu masin kasutab veebiserveritega suhtlemiseks
+  
+### tcpdump ülesanne
+
+Käsk: `printf 'HEAD / HTTP/1.1\r\nHost: example.net\r\n\r\n' | nc example.net 80`
+
+```
+kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ sudo tcpdump -n host example.net
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+18:00:24.499751 IP 172.17.0.4.35124 > 93.184.216.34.80: Flags [S], seq 2685880152, win 64240, options [mss 1460,sackOK,TS val 2054948752 ecr 0,nop,wscale 7], length 0
+18:00:24.579154 IP 93.184.216.34.80 > 172.17.0.4.35124: Flags [S.], seq 750517273, ack 2685880153, win 65535, options [mss 1460,sackOK,TS val 1460704456 ecr 2054948752,nop,wscale 9], length 0
+18:00:24.579190 IP 172.17.0.4.35124 > 93.184.216.34.80: Flags [.], ack 1, win 502, options [nop,nop,TS val 2054948831 ecr 1460704456], length 0
+18:00:24.579270 IP 172.17.0.4.35124 > 93.184.216.34.80: Flags [P.], seq 1:37, ack 1, win 502, options [nop,nop,TS val 2054948831 ecr 1460704456], length 36: HTTP
+18:00:24.657784 IP 93.184.216.34.80 > 172.17.0.4.35124: Flags [.], ack 37, win 128, options [nop,nop,TS val 1460704535 ecr 2054948831], length 0
+18:00:24.657787 IP 93.184.216.34.80 > 172.17.0.4.35124: Flags [P.], seq 1:517, ack 37, win 128, options [nop,nop,TS val 1460704535 ecr 2054948831], length 516: HTTP: HTTP/1.0 501 Not Implemented
+18:00:24.657827 IP 172.17.0.4.35124 > 93.184.216.34.80: Flags [.], ack 517, win 498, options [nop,nop,TS val 2054948910 ecr 1460704535], length 0
+18:00:24.657789 IP 93.184.216.34.80 > 172.17.0.4.35124: Flags [F.], seq 517, ack 37, win 128, options [nop,nop,TS val 1460704535 ecr 2054948831], length 0
+18:00:24.657935 IP 172.17.0.4.35124 > 93.184.216.34.80: Flags [F.], seq 37, ack 518, win 501, options [nop,nop,TS val 2054948910 ecr 1460704535], length 0
+18:00:24.736390 IP 93.184.216.34.80 > 172.17.0.4.35124: Flags [.], ack 38, win 128, options [nop,nop,TS val 1460704614 ecr 2054948910], length 0
+18:01:24.877731 IP 172.17.0.4.40890 > 93.184.216.34.80: Flags [S], seq 109788949, win 64240, options [mss 1460,sackOK,TS val 2055009130 ecr 0,nop,wscale 7], length 0
+18:01:24.956367 IP 93.184.216.34.80 > 172.17.0.4.40890: Flags [S.], seq 1209223184, ack 109788950, win 65535, options [mss 1460,sackOK,TS val 1855821290 ecr 2055009130,nop,wscale 9], length 0
+18:01:24.956415 IP 172.17.0.4.40890 > 93.184.216.34.80: Flags [.], ack 1, win 502, options [nop,nop,TS val 2055009208 ecr 1855821290], length 0
+18:01:24.956535 IP 172.17.0.4.40890 > 93.184.216.34.80: Flags [P.], seq 1:39, ack 1, win 502, options [nop,nop,TS val 2055009208 ecr 1855821290], length 38: HTTP: HEAD / HTTP/1.1
+18:01:25.034494 IP 93.184.216.34.80 > 172.17.0.4.40890: Flags [.], ack 39, win 128, options [nop,nop,TS val 1855821368 ecr 2055009208], length 0
+18:01:25.035005 IP 93.184.216.34.80 > 172.17.0.4.40890: Flags [P.], seq 1:335, ack 39, win 128, options [nop,nop,TS val 1855821369 ecr 2055009208], length 334: HTTP: HTTP/1.1 200 OK
+18:01:25.035028 IP 172.17.0.4.40890 > 93.184.216.34.80: Flags [.], ack 335, win 500, options [nop,nop,TS val 2055009287 ecr 1855821369], length 0
+18:01:33.017308 IP 172.17.0.4.40890 > 93.184.216.34.80: Flags [F.], seq 39, ack 335, win 501, options [nop,nop,TS val 2055017269 ecr 1855821369], length 0
+18:01:33.095850 IP 93.184.216.34.80 > 172.17.0.4.40890: Flags [F.], seq 335, ack 40, win 128, options [nop,nop,TS val 1855829430 ecr 2055017269], length 0
+18:01:33.095876 IP 172.17.0.4.40890 > 93.184.216.34.80: Flags [.], ack 336, win 501, options [nop,nop,TS val 2055017348 ecr 1855829430], length 0  
+```
+
+### Network protokollide töö illustreerimine
+
+<details>
+  <summary>Sequence diagram example</summary> 
+  
+![image](https://user-images.githubusercontent.com/115208151/199568262-261d7ab9-d5d2-48f6-807c-9a34760365e2.png)
+  
+</details>
+
+### TCP Flags
+  
+**The six basic TCP flags**
+
+What is a flag?
+In low-level computer languages, a flag is a Boolean value — a true or false value — that is stored in memory as a single bit. If a flag bit is 1, we say the flag is set. If the flag bit is 0, the flag is cleared (or unset).
+
+Usually, flags come in groups, each of which can be set or cleared.
+
+The six basic TCP flags
+The original TCP packet format has six flags. Two more optional flags have since been standardized, but they are much less important to the basic functioning of TCP. For each packet, tcpdump will show you which flags are set on that packet.
+
+- SYN (synchronize) [S] — This packet is opening a new TCP session and contains a new initial sequence number.
+- FIN (finish) [F] — This packet is used to close a TCP session normally. The sender is saying that they are finished sending, but they can still receive data from the other endpoint.
+- PSH (push) [P] — This packet is the end of a chunk of application data, such as an HTTP request.
+- RST (reset) [R] — This packet is a TCP error message; the sender has a problem and wants to reset (abandon) the session.
+- ACK (acknowledge) [.] — This packet acknowledges that its sender has received data from the other endpoint. Almost every packet except the first SYN will have the ACK flag set.
+- URG (urgent) [U] — This packet contains data that needs to be delivered to the application out-of-order. Not used in HTTP or most other current applications.
+
+<details>
+  <summary>Näita veel infot</summary> 
+
+**Three-way handshake**
+The first packet sent to initiate a TCP session always has the SYN flag set. This initial SYN packet is what a client sends to a server to start opening a TCP connection. This is the first packet you see in the sample tcpdump data, with Flags [S]. This packet also contains a new, randomized sequence number (seq in tcpdump output).
+
+If the server accepts the connection, it sends a packet back that has the SYN and ACK flags, and acknowledges the initial SYN. This is the second packet in the sample data, with Flags [S.]. This contains a different initial sequence number.
+
+(If the server doesn't want to accept the connection, it may not send anything at all. Or it may send a packet with the RST flag.)
+
+Finally, the client acknowledges receiving the SYN|ACK packet by sending an ACK packet of its own.
+
+This exchange of three packets is usually called the TCP three-way handshake. In addition to sequence numbers, the two endpoints also exchange other information used to set up the connection.
+
+**Four-way teardown**
+  
+When either endpoint is done sending data into the connection, it can send a FIN packet to indicate that it is finished. The other endpoint will send an ACK to indicate that it has received the FIN.
+
+In the example HTTP data, the client sends its FIN first, as soon as it is done sending the HTTP request. This is the first packet containing Flags [F.].
+
+Eventually the other endpoint will be done sending as well, and will send a FIN of its own. Then the first endpoint will send an ACK.
+
+**In between**
+  
+In a long-running connection, there will be many packets exchanged back and forth. Some of them will contain application data; others may be only acknowledgments with no data (length 0). However, all TCP packets in a connection except the initial SYN will contain an acknowledgment of all the data that the sender has received so far. Therefore, they will all have the ACK flag set. (This is why tcpdump depicts the ACK flag with just a dot: it's really common.)
+
+ICMP and UDP don't have TCP flags
+If you look at tcpdump data for pings or basic DNS lookups, you will not see flags. This is because ping uses ICMP, and basic DNS lookups use UDP. These protocols do not have TCP flags or sequence numbers.
+
+</details>
+
+</details>
   
 ## Ei olnud võimalik sisestada
   
