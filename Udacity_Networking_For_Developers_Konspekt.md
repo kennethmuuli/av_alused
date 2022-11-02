@@ -5,7 +5,7 @@ GCS otselink: https://console.cloud.google.com/home/dashboard
 Enne Google Cloud Shellis käskude kasutamist sisestada:
 ```
 sudo apt-get update
-sudo apt-get install netcat-openbsd tcpdump traceroute mtr iputils-ping lsof
+sudo apt-get install netcat-openbsd tcpdump traceroute mtr iputils-ping lsof -y
 ```
 
 ## From Ping to HTTP käsud ja sisu selgitus
@@ -174,10 +174,68 @@ Erinevalt `host` käsust, tagastab antud käsk DNSi sissekanded lähemale nende 
 </details>
   
 </details>
+
+## Addressing and networks käsud ja sisu selgitus
+
+<details>
+  <summary>Vaata lähemalt</summary> 
+  
+### Network blocks
+
+Network block näitab, mitu aadressi on antud võrgus kasutusel konkreetse masinani edasi suunamiseks (host aadressiks). Seda märgitakse tavaliselt IP aadressi järgi näiteks nii: `123.123.123.123 /24` kus /24 näitab võrgu eesliite (prefixi) pikkust. See tähendab, et 24 bitti kasutatakse eesliidesena (network part) ja ülejäänud 8 bitti kasutatakse kohalikuks suunamiseks (host part). Tuleta meelde bittide teisendamist kümnend süsteemi. 8 bitti ei tähenda loomulikult, et host aadresse on vaid 8 tükki 2 astmes 8 aadressi ehk 256. Praktikas aga on nendest kasutatavad 253 või vähem aadressi, kuna 3 reeglina on esimene ja viimane aadress tühjad ning esimene vaba aadress ruuteri oma.
+  
+Network blocki pikkust on võimalik tuvastada ka selle maski järgi (subnet mask), näiteks 255.255.255.0 (hexina ff ff ff 0) viitab 24 bitisele network blockile. 16 bitine network block aga kannaks subnet maski 255.255.0.0.
+  
+### `ip addr show`
+  
+Käsuga on võimalik näha masina interface, millel on tegelikult küljes IP (masina endal otseselt IP-d ei ole). inet real on näha IPv4 aadresse ja nende network blockide suuruseid.
+
+Näidis tulemus:
+```
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether 02:42:3b:80:76:50 brd ff:ff:ff:ff:ff:ff
+    inet 172.18.0.1/16 brd 172.18.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+10: eth0@if11: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether 02:42:ac:11:00:04 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.4/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever  
+```
+
+Loopback interface on nende seas eriline. Sellel on pea alati aadress 127.0.0.1 (local host) ja see võimaldab programmidel samal interfacel rääkida teiste programmidega.
+
+### `ifconfig | less`
+  
+Käsk annab sarnase tulemuse, mis `ip addr show` kuid toob esile palju rohkem infot, s.t. kõik interfaceid, millest enamus ei ole seotud interneti liiklusega, kuid käsk on kasulik näiteks printeri leidmiseks.
+  
+## default gateway
+
+`ip route show default` (Linux) ja `netstat -nr` (Linux, Mac, Unix) on käsud, millega on võimalik leida enda gateway (ruuteri) default aadressi.
+  
+</details>
   
 ## Ei olnud võimalik sisestada
   
 **MÄRKUSEKS: SISSE KIRJUTAMISEL JÄÄDVUSTA ALATI KA KOHT, KUS PROBLEEM TEKKIS.**
+  
+> **erinevad default gatewayd**
+  
+`ip route show default` / `netstat -nr` annavad erinevaid tulemusi. Vaata alla poole:
+
+```
+kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ ip route show default
+default via 172.17.0.1 dev eth0
+kenneth_muuli@cloudshell:~ (my-project-1523600208553)$ netstat -nr
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+0.0.0.0         172.17.0.1      0.0.0.0         UG        0 0          0 eth0
+172.17.0.0      0.0.0.0         255.255.0.0     U         0 0          0 eth0
+172.18.0.0      0.0.0.0         255.255.0.0     U         0 0          0 docker0
+```  
   
 > **tcpdump -n -c5 -i eth0 port 22**
   
