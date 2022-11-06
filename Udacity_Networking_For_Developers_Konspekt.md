@@ -348,6 +348,25 @@ If you look at tcpdump data for pings or basic DNS lookups, you will not see fla
 
 </details>
   
+## Big Networks
+  
+<details>
+  <summary>Vaata lähemalt</summary>
+  
+### 'traceroute' ja 'mtr'
+  
+'traceroute example.com' käsk näitab "hüppeid" sinu seadmest kuni päritud aadressini, s.t. millistelt IP-delt/ruuteritelt päring läbi läheb enne kui see jõuab sinu soovitud IP-ni (ja tagasi tuleb).
+  
+'mtr' käsk näitab sisuliselt sama infot, mida 'traceroute' kuid täpsemalt, kuna see jälgib teekonda elavalt, s.t. "lives" ja teekonda tehakse läbi korduvalt. Käsk võib välja tuua erinevaid teekondasid sihini.
+  
+## bandwidth vs latency
+
+- bandwidth näitab, kui palju andmeid saab konkreetset kanalit pidi mingis ajaühikus liikuda. Ühik: bits/second
+- latency näitab, kui kaua kulub aega andmete ühest kohast jõudmiseks teise.
+- bandwidth delay product
+  
+</details>
+  
 ## Ei olnud võimalik sisestada
   
 **MÄRKUSEKS: SISSE KIRJUTAMISEL JÄÄDVUSTA ALATI KA KOHT, KUS PROBLEEM TEKKIS.**
